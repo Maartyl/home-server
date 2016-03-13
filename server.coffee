@@ -4,6 +4,11 @@ bodyParser  = require 'body-parser'
 multer      = require 'multer'
 log4js      = require 'log4js'
 morgan      = require 'morgan'
+minimist    = require 'minimist'
+
+packageJson = require './package.json'
+
+argh = minimist process.argv.slice 2 # opts in hash
 
 log4js.loadAppender 'file'
 log4js.addAppender (log4js.appenders.file 'logs/home-server.log'), 'h-serv'
@@ -13,16 +18,15 @@ errNonNil = (err) -> logger.error err if err
 
 app = express()
 
-version = '0.0.2'
-port = 8880
+version = packageJson.version
+port = argh.port or argh.p or 8880
 upload_key = undefined
 
 
 # asynchronous initializations
 init = (cont) ->
   fs.readFile './private/upload_key', (err, data) ->
-    if err
-      return logger.error err
+    if err then return logger.error err
 
     upload_key = data.toString 'utf8'
     cont {}

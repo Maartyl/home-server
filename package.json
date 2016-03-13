@@ -1,12 +1,13 @@
 {
   "name": "home-server",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "private": true,
   "dependencies": {
     "body-parser": "^1.15.0",
     "express": "^4.13.3",
     "jade": "^1.11.0",
     "log4js": "^0.6.33",
+    "minimist": "^1.2.0",
     "morgan": "^1.7.0",
     "multer": "^1.1.0"
   }
