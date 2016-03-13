@@ -1,0 +1,16 @@
+doctype html
+html
+  head
+    title #{title}
+  body
+    form(role="form", action=action, method="post", enctype="multipart/form-data")
+      div.form-group
+        div.key
+          label(for="key") Key
+          input(type="text", name="key", id="key")
+        div.file
+          label(for=fFileId) Select file to upload
+          input(type="file", name=fFileId, id=fFileId)
+        div.submit
+          input(type="submit", value="Submit")
+      
