@@ -23,12 +23,12 @@ upload_key = undefined
 
 app = express()
 start_server = (opts) ->
-  http = require 'http'
-  https = require 'https'
-  http.createServer(app).listen opts.httpPort, ->
-    logger.info "HTTP server started on #{opts.httpPort};  version: #{version}"
-  https.createServer(opts.credentials, app).listen opts.httpsPort, ->
-    logger.info "HTTPS server started on #{opts.httpsPort};  version: #{version}"
+  if opts.http
+    (require 'http').createServer(app).listen opts.httpPort, ->
+      logger.info "HTTP server started on #{opts.httpPort};  version: #{version}"
+  if opts.https
+    (require 'https').createServer(opts.credentials, app).listen opts.httpsPort, ->
+      logger.info "HTTPS server started on #{opts.httpsPort};  version: #{version}"
 
 
 # asynchronous initializations
@@ -44,6 +44,9 @@ init = (cont) ->
       httpPort: argh.port or argh.p or 8880
       httpsPort: argh.sslPort or argh.s or 4443
       credentials: credentials
+      http: not argh.nohttp
+      https: !!argh.https
+
 
 
 upload = multer dest:'./uploads/' # middleware, but only used for specific routes
