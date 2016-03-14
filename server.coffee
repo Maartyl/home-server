@@ -5,6 +5,7 @@ multer      = require 'multer'
 log4js      = require 'log4js'
 morgan      = require 'morgan'
 minimist    = require 'minimist'
+compression = require 'compression'
 
 packageJson = require './package.json'
 
@@ -16,11 +17,17 @@ logger = log4js.getLogger 'h-serv'
 logger.setLevel 'TRACE'
 errNonNil = (err) -> logger.error err if err
 
-app = express()
-
 version = packageJson.version
-port = argh.port or argh.p or 8880
 upload_key = undefined
+
+app = express()
+start_server = (opts) ->
+  http = require 'http'
+  # https = require 'https'
+  http.createServer(app).listen opts.httpPort, ->
+    logger.info "HTTP server started on #{opts.httpPort};  version: #{version}"
+  # https.createServer(opts.credentials, app).listen opts.httpsPort, ->
+  #   logger.info "HTTPS server started on #{opts.httpsPort};  version: #{version}"
 
 
 # asynchronous initializations
@@ -29,11 +36,18 @@ init = (cont) ->
     if err then return logger.error err
 
     upload_key = data.toString 'utf8'
-    cont {}
+#     privateKey  = fs.readFileSync('sslcert/server.key', 'utf8')
+#     certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
+#     credentials = {key: privateKey, cert: certificate}
+    cont
+      httpPort: argh.port or argh.p or 8880
+      httpsPort: 4443
+      credentials: {}
 
 
-upload = multer dest:'./uploads/'
+upload = multer dest:'./uploads/' # middleware, but only used for specific routes
 
+app.use compression()
 app.use morgan ':remote-addr :remote-user ":method :url HTTP/:http-version"' +
   ' :status :res[content-length] ":referrer" ":user-agent"',
   stream: write: (x) -> logger.trace x # needs lambda to retain logger:this
@@ -43,9 +57,10 @@ app.use bodyParser.urlencoded extended:true #parse form responses in POST
 
 app.set 'views', './views'
 app.set 'view engine', 'jade'
-
-app.enable 'trust proxy'
+# app.enable 'trust proxy'
 app.disable 'x-powered-by'  # don't include header 'powered by express'
+
+# ROUTES
 
 app.get '/wallpaper', (req, res)->
   res.render 'wallpaper',
@@ -56,12 +71,6 @@ app.get '/upload', (req, res) ->
     title: 'Upload file'
     fFileId: 'toSave'
     action: '/upload'
-
-
-
-update_file_map = (id, name) ->
-  data = id + ': ' + name + '\n'
-  fs.appendFile './uploads/index.cson', data, errNonNil
 
 app.post '/upload', upload.single('toSave'), (req, res) ->
   key = req.body.key
@@ -87,7 +96,14 @@ app.use (req, res, next) ->
   res.status 404
   res.render 'error', msg:'404'
 
-start_server = (opts) ->
-  app.listen port, -> logger.info("server started on #{port};  version: #{version}")
 
+#
+# other functions
+#
+update_file_map = (id, name) ->
+  data = id + ': ' + name + '\n'
+  fs.appendFile './uploads/index.cson', data, errNonNil
+
+
+# all static set up: start server
 init start_server

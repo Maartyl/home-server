@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "body-parser": "^1.15.0",
+    "compression": "^1.6.1",
     "express": "^4.13.3",
     "jade": "^1.11.0",
     "log4js": "^0.6.33",
