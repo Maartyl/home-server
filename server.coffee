@@ -85,7 +85,7 @@ app.post '/upload', upload.single('toSave'), (req, res) ->
   else
     update_file_map file.filename, file.originalname
     logger.info 'file uploaded: ' + file.originalname + ' @ ' + file.path
-    res.render 'error', msg:'Uploaded'
+    res.render 'success', msg:'Uploaded'
 
 
 
