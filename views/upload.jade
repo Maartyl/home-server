@@ -1,16 +1,21 @@
-doctype html
-html
-  head
-    title #{title}
-  body
-    form(role="form", action=action, method="post", enctype="multipart/form-data")
-      div.form-group
-        div.key
-          label(for="key") Key
-          input(type="text", name="key", id="key")
-        div.file
-          label(for=fFileId) Select file to upload
-          input(type="file", name=fFileId, id=fFileId)
-        div.submit
-          input(type="submit", value="Submit")
-      
+extends ./layout.jade
+
+block title
+  | #{title}
+
+block body
+  .header.clearfix
+    h1.text-muted Direct file uploader
+  form.form-horizontal.jumbotron(role="form",
+      action=action, method="post", enctype="multipart/form-data")
+    .form-group.key
+      label.control-label.col-sm-2(for="key") Key
+      .col-sm-10
+        input.form-control(type="text", name="key", id="key", placeholder="Key")
+    .form-group.file
+      label.control-label.col-sm-2(for=fFileId) Select file to upload
+      .col-sm-10
+        // col-sm-12 ~== width:100%
+        input.col-sm-12(type="file", name=fFileId, id=fFileId)
+    input.submit.btn.btn-primary(type="submit", value="Upload")
+    

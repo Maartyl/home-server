@@ -76,16 +76,16 @@ app.post '/upload', upload.single('toSave'), (req, res) ->
   file = req.file
 
   unless file
-    return res.end 'no file provided'
+    return res.render 'error', msg:'No file provided'
 
   if key isnt upload_key
     fs.unlink file.path, errNonNil
     logger.warn 'wrong key: ' + key
-    res.end 'Wrong key'
+    res.render 'error', msg: 'Wrong key'
   else
     update_file_map file.filename, file.originalname
     logger.info 'file uploaded: ' + file.originalname + ' @ ' + file.path
-    res.end 'Uploaded'
+    res.render 'error', msg:'Uploaded'
 
 
 

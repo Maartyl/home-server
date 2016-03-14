@@ -1,0 +1,11 @@
+extends ./layout.jade
+
+block title
+  | #{msg} - Error
+
+block body    
+  .header.clearfix
+    h1.text-muted Error
+  .row.jumbotron.bg-danger
+    h3.col-sm-12
+      p.text-danger #{msg}
