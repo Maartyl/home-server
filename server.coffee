@@ -45,6 +45,7 @@ app.set 'views', './views'
 app.set 'view engine', 'jade'
 
 app.enable 'trust proxy'
+app.disable 'x-powered-by'  # don't include header 'powered by express'
 
 ###
 log_req = (req) ->
@@ -88,6 +89,12 @@ app.post '/upload', upload.single('toSave'), (req, res) ->
     res.render 'success', msg:'Uploaded'
 
 
+
+# this handles 404
+# must be after all routes and everything
+app.use (req, res, next) ->
+  res.status 404
+  res.render 'error', msg:'404'
 
 start_server = (opts) ->
   app.listen port, -> logger.info("server started on #{port};  version: #{version}")
