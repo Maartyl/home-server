@@ -6,6 +6,7 @@ log4js      = require 'log4js'
 morgan      = require 'morgan'
 minimist    = require 'minimist'
 compression = require 'compression'
+cson        = require 'cson'
 
 packageJson = require './package.json'
 
@@ -23,11 +24,11 @@ upload_key = undefined
 app = express()
 start_server = (opts) ->
   http = require 'http'
-  # https = require 'https'
+  https = require 'https'
   http.createServer(app).listen opts.httpPort, ->
     logger.info "HTTP server started on #{opts.httpPort};  version: #{version}"
-  # https.createServer(opts.credentials, app).listen opts.httpsPort, ->
-  #   logger.info "HTTPS server started on #{opts.httpsPort};  version: #{version}"
+  https.createServer(opts.credentials, app).listen opts.httpsPort, ->
+    logger.info "HTTPS server started on #{opts.httpsPort};  version: #{version}"
 
 
 # asynchronous initializations
@@ -36,13 +37,13 @@ init = (cont) ->
     if err then return logger.error err
 
     upload_key = data.toString 'utf8'
-#     privateKey  = fs.readFileSync('sslcert/server.key', 'utf8')
-#     certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
-#     credentials = {key: privateKey, cert: certificate}
+    privateKey  = fs.readFileSync 'sslcert/server.key', 'utf8'
+    certificate = fs.readFileSync 'sslcert/server.cert', 'utf8'
+    credentials = key: privateKey, cert: certificate
     cont
       httpPort: argh.port or argh.p or 8880
-      httpsPort: 4443
-      credentials: {}
+      httpsPort: argh.sslPort or argh.s or 4443
+      credentials: credentials
 
 
 upload = multer dest:'./uploads/' # middleware, but only used for specific routes
@@ -82,9 +83,9 @@ app.post '/upload', upload.single('toSave'), (req, res) ->
   if key isnt upload_key
     fs.unlink file.path, errNonNil
     logger.warn 'wrong key: ' + key
-    res.render 'error', msg: 'Wrong key'
+    res.render 'error', msg:'Wrong key'
   else
-    update_file_map file.filename, file.originalname
+    update_file_map file.filename, name:file.originalname, src:req.ip
     logger.info 'file uploaded: ' + file.originalname + ' @ ' + file.path
     res.render 'success', msg:'Uploaded'
 
@@ -100,9 +101,9 @@ app.use (req, res, next) ->
 #
 # other functions
 #
-update_file_map = (id, name) ->
-  data = id + ': ' + name + '\n'
-  fs.appendFile './uploads/index.cson', data, errNonNil
+update_file_map = (id, info) ->
+  data = cson.createCSONString "#{id}": info
+  fs.appendFile './uploads/index.cson', data + '\n', errNonNil
 
 
 # all static set up: start server
