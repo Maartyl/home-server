@@ -47,19 +47,11 @@ app.set 'view engine', 'jade'
 app.enable 'trust proxy'
 app.disable 'x-powered-by'  # don't include header 'powered by express'
 
-###
-log_req = (req) ->
-  logger.trace("connection: #{req.headers['x-forwarded-for'] or '?'}," +
-    " #{req.connection.remoteAddress}, #{req.ips} @ #{req.method} #{req.url}")
-###
-
 app.get '/wallpaper', (req, res)->
-  # log_req req
   res.render 'wallpaper',
     version:version
 
 app.get '/upload', (req, res) ->
-  # log_req req
   res.render 'upload',
     title: 'Upload file'
     fFileId: 'toSave'
@@ -72,7 +64,6 @@ update_file_map = (id, name) ->
   fs.appendFile './uploads/index.cson', data, errNonNil
 
 app.post '/upload', upload.single('toSave'), (req, res) ->
-  # log_req req
   key = req.body.key
   file = req.file
 
