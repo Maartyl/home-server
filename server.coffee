@@ -52,9 +52,9 @@ log_req = (req) ->
     " #{req.connection.remoteAddress}, #{req.ips} @ #{req.method} #{req.url}")
 ###
 
-app.get '/', (req, res)->
+app.get '/wallpaper', (req, res)->
   # log_req req
-  res.render 'index',
+  res.render 'wallpaper',
     version:version
 
 app.get '/upload', (req, res) ->
