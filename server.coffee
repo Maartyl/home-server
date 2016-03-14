@@ -31,21 +31,25 @@ start_server = (opts) ->
       logger.info "HTTPS server started on #{opts.httpsPort};  version: #{version}"
 
 
-# asynchronous initializations
+# dynamic initializations
 init = (cont) ->
   fs.readFile './private/upload_key', (err, data) ->
     if err then return logger.error err
 
     upload_key = data.toString 'utf8'
-    privateKey  = fs.readFileSync 'sslcert/server.key', 'utf8'
-    certificate = fs.readFileSync 'sslcert/server.cert', 'utf8'
-    credentials = key: privateKey, cert: certificate
+
+    useHttps = !!argh.https
+    load = if useHttps #loads privateKry and certificate
+      (suff) -> fs.readFileSync 'sslcert/server.' + suff, 'utf8'
+    else
+      (suff) -> ''
+
     cont
       httpPort: argh.port or argh.p or 8880
       httpsPort: argh.sslPort or argh.s or 4443
-      credentials: credentials
+      credentials: key: (load 'key'), cert: (load 'cert')
       http: not argh.nohttp
-      https: !!argh.https
+      https: useHttps
 
 
 
