@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "body-parser": "^1.15.0",
+    "coffee-script": "^1.10.0",
     "compression": "^1.6.1",
     "cson": "^3.0.2",
     "express": "^4.13.3",

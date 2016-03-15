@@ -1,3 +1,5 @@
+require 'coffee-script/register' # allows requiring .coffee modules
+
 express     = require 'express'
 fs          = require 'fs'
 bodyParser  = require 'body-parser'
