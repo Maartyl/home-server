@@ -96,6 +96,9 @@ app.post '/upload', upload.single('toSave'), (req, res) ->
     logger.info 'file uploaded: ' + file.originalname + ' @ ' + file.path
     res.render 'success', msg:'Uploaded'
 
+app.get '/ignore', ->
+  zxczxczxczc = 5
+
 
 
 # this handles 404
