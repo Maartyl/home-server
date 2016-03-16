@@ -40,7 +40,8 @@ init = (cont) ->
 
     upload_key = data.toString 'utf8'
 
-    useHttps = !!argh.https
+    useHttps = not argh.nohttps
+
     load = if useHttps #loads privateKry and certificate
       (suff) -> fs.readFileSync 'sslcert/server.' + suff, 'utf8'
     else
@@ -49,7 +50,10 @@ init = (cont) ->
     cont
       httpPort: argh.port or argh.p or 8880
       httpsPort: argh.sslPort or argh.s or 4443
-      credentials: key: (load 'key'), cert: (load 'cert')
+      credentials:
+        key: load 'key'
+        cert: load 'cert'
+        ca: [load 'intermediate.pem']
       http: not argh.nohttp
       https: useHttps
 
@@ -100,6 +104,10 @@ app.post '/upload', upload.single('toSave'), (req, res) ->
 
 app.get '/ignore', ->
   zxczxczxczc = 5
+
+# SSL thing: proof of ownership
+app.get '/.well-known/acme-challenge/qGBfw4Z1_XIXHi2Njl5n2WThOnIrXXBqrHm0N76GC1M', (req, res)->
+  res.send 'qGBfw4Z1_XIXHi2Njl5n2WThOnIrXXBqrHm0N76GC1M.fNQWXQOTMH1J_ZevkEw32KXBSCotohqXqazp68pkv2Q'
 
 
 
