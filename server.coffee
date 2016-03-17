@@ -62,11 +62,10 @@ init = (cont) ->
 upload = multer dest:'./uploads/' # middleware, but only used for specific routes
 
 app.use compression()
+app.use express.static 'public' #serve static files in 'public' folder
 app.use morgan ':remote-addr :remote-user ":method :url HTTP/:http-version"' +
   ' :status :res[content-length] ":referrer" ":user-agent"',
   stream: write: (x) -> logger.trace x # needs lambda to retain logger:this
-
-app.use express.static 'public' #serve static files in 'public' folder
 app.use bodyParser.urlencoded extended:true #parse form responses in POST
 
 app.set 'views', './views'
