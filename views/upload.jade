@@ -4,18 +4,20 @@ block title
   | #{title}
 
 block body
-  .header.clearfix
-    h1.text-muted Direct file uploader
+  .header.clearfix.row
+    .col-sm-2
+    h1.text-muted.col-sm-10 Direct file uploader
   form.form-horizontal.jumbotron(role="form", id="formUpload"
       action=action, method="post", enctype="multipart/form-data")
-    .form-group.key
-      label.control-label.col-sm-2(for="key") Key
-      .col-sm-10
+    .form-group.key.row
+      label.control-label.col-sm-3(for="key") Key
+      .col-sm-9
         input.form-control(type="text", name="key", id="key", placeholder="Key")
-    .form-group.file
-      label.control-label.col-sm-2(for="toUpload") Select file to upload
-      .col-sm-10
-        // col-sm-12 ~== width:100%
-        input.col-sm-12(type="file", name=fFileId, id="toUpload")
-    input.submit.btn.btn-primary(type="submit", value="Upload")
+    .form-group.file.row
+      label.control-label.col-sm-3(for="toUpload") Select file to upload
+      input.col-sm-9(type="file", name=fFileId, id="toUpload")
+    .row
+      .col-sm-3.col-xs-1
+      input.submit.btn.btn-primary.col-sm-2.col-md-1.col-xs-6(
+        type="submit", value="Upload")
     
