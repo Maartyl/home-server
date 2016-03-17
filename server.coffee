@@ -38,7 +38,7 @@ init = (cont) ->
   fs.readFile './private/upload_key', (err, data) ->
     if err then return logger.error err
 
-    upload_key = data.toString 'utf8'
+    upload_key = data.toString('utf8').trim()
 
     useHttps = not argh.nohttps
 
@@ -87,7 +87,7 @@ app.get '/upload', (req, res) ->
     action: '/upload'
 
 app.post '/upload', upload.single('toSave'), (req, res) ->
-  key = req.body.key
+  key = req.body.key?.trim()
   file = req.file
 
   unless file
