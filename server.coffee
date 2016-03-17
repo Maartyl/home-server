@@ -115,7 +115,7 @@ app.get '/.well-known/acme-challenge/qGBfw4Z1_XIXHi2Njl5n2WThOnIrXXBqrHm0N76GC1M
 # must be after all routes and everything
 app.use (req, res, next) ->
   res.status 404
-  res.render 'error', msg:'404'
+    .render '404'
 
 
 #
