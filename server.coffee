@@ -15,7 +15,7 @@ packageJson = require './package.json'
 
 argh = minimist process.argv.slice 2 # opts in hash
 
-myUri = 'https://maa.home.kg/' # must match HTTPS certificate
+myUri = 'https://maa.home.kg' # must match HTTPS certificate
 
 log4js.loadAppender 'file'
 log4js.addAppender (log4js.appenders.file 'logs/home-server.log'), 'h-serv'
@@ -35,7 +35,7 @@ start_server = (opts) ->
 
 http_redirect_serv = ->
   express().use (req, res, next) ->
-    res.redirect 301, myUri
+    res.redirect 301, myUri + req.url
 
 readFileCurry = (path) ->
   (cont) -> fs.readFile path, 'utf8', cont
