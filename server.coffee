@@ -55,7 +55,7 @@ init = (cont) ->
       credentials:
         key: load 'key'
         cert: load 'cert'
-        ca: [load 'intermediate.pem']
+        ca: load 'intermediate.pem'
       http: not argh.nohttp
       https: useHttps
 
