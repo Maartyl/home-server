@@ -14,6 +14,8 @@ packageJson = require './package.json'
 
 argh = minimist process.argv.slice 2 # opts in hash
 
+myUri = 'https://maa.home.kg/' # must match HTTPS certificate
+
 log4js.loadAppender 'file'
 log4js.addAppender (log4js.appenders.file 'logs/home-server.log'), 'h-serv'
 logger = log4js.getLogger 'h-serv'
@@ -26,8 +28,8 @@ upload_key = undefined
 app = express()
 start_server = (opts) ->
   if opts.http
-    (require 'http').createServer(app).listen opts.httpPort, ->
-      logger.info "HTTP server started on #{opts.httpPort};  version: #{version}"
+    http_redirect_serv().listen opts.httpPort, ->
+      logger.info "HTTP redirect server started on #{opts.httpPort};  version: #{version}"
   if opts.https
     (require 'https').createServer(opts.credentials, app).listen opts.httpsPort, ->
       logger.info "HTTPS server started on #{opts.httpsPort};  version: #{version}"
@@ -56,6 +58,10 @@ init = (cont) ->
         ca: [load 'intermediate.pem']
       http: not argh.nohttp
       https: useHttps
+
+http_redirect_serv = ->
+  express().use (req, res, next) ->
+    res.redirect 301, myUri
 
 # MIDDLEWARE & settings
 
