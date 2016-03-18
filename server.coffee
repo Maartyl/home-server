@@ -9,6 +9,7 @@ morgan      = require 'morgan'
 minimist    = require 'minimist'
 compression = require 'compression'
 cson        = require 'cson'
+async       = require 'async'
 
 packageJson = require './package.json'
 
@@ -27,41 +28,38 @@ upload_key = undefined
 
 app = express()
 start_server = (opts) ->
-  if opts.http
-    http_redirect_serv().listen opts.httpPort, ->
-      logger.info "HTTP redirect server started on #{opts.httpPort};  version: #{version}"
-  if opts.https
-    (require 'https').createServer(opts.credentials, app).listen opts.httpsPort, ->
-      logger.info "HTTPS server started on #{opts.httpsPort};  version: #{version}"
-
-
-# dynamic initializations
-init = (cont) ->
-  fs.readFile './private/upload_key', (err, data) ->
-    if err then return logger.error err
-
-    upload_key = data.toString('utf8').trim()
-
-    useHttps = not argh.nohttps
-
-    load = if useHttps #loads privateKry and certificate
-      (suff) -> fs.readFileSync 'sslcert/server.' + suff, 'utf8'
-    else
-      (suff) -> ''
-
-    cont
-      httpPort: argh.port or argh.p or 8880
-      httpsPort: argh.sslPort or argh.s or 4443
-      credentials:
-        key: load 'key'
-        cert: load 'cert'
-        ca: load 'intermediate.pem'
-      http: not argh.nohttp
-      https: useHttps
+  http_redirect_serv().listen opts.httpPort, ->
+    logger.info "HTTP redirect server started on #{opts.httpPort};  version: #{version}"
+  (require 'https').createServer(opts.credentials, app).listen opts.httpsPort, ->
+    logger.info "HTTPS server started on #{opts.httpsPort};  version: #{version}"
 
 http_redirect_serv = ->
   express().use (req, res, next) ->
     res.redirect 301, myUri
+
+readFileCurry = (path) ->
+  (cont) -> fs.readFile path, 'utf8', cont
+
+# dynamic initializations
+init = (cont) ->
+  loadSSL = (suff) -> readFileCurry 'sslcert/server.' + suff
+
+  async.parallel
+    up_key: readFileCurry './private/upload_key'
+    c_key: loadSSL 'key'
+    c_cert: loadSSL 'cert'
+    c_ca: loadSSL 'intermediate.pem'
+    (err, rets) ->
+      if err then return logger.error err
+
+      upload_key = rets.up_key.toString('utf8').trim()
+      cont
+        httpPort: argh.port or argh.p or 8880
+        httpsPort: argh.sslPort or argh.s or 4443
+        credentials:
+          key: rets.c_key
+          cert: rets.c_cert
+          ca: rets.c_ca
 
 # MIDDLEWARE & settings
 
