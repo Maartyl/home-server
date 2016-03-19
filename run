@@ -1,2 +1,2 @@
 #!/bin/bash
-util/nodemon server.js $@
+util/nodemon main.js $@
