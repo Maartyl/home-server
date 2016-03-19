@@ -1,11 +1,12 @@
 require 'coffee-script/register' # allows requiring .coffee modules
 
 express     = require 'express'
-bodyParser  = require 'body-parser'
-morgan      = require 'morgan'
 minimist    = require 'minimist'
+
+# middleware
+morgan      = require 'morgan'
 compression = require 'compression'
-async       = require 'async'
+bodyParser  = require 'body-parser'
 
 # app/ refers to root dir; symlink in node_modules
 extend      = require 'app/extend'
