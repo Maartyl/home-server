@@ -1,6 +1,6 @@
 {
   "name": "home-server",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "dependencies": {
     "async": "^1.5.2",
