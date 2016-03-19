@@ -9,61 +9,34 @@ async       = require 'async'
 
 # app/ refers to root dir; symlink in node_modules
 extend      = require 'app/extend'
-util        = require 'app/util'
 logger      = require 'app/logger'
+server      = require 'app/server'
 
 packageJson = require 'app/package.json'
 
-version = packageJson.version
-myUri = 'https://maa.home.kg' # must match HTTPS certificate
-
 argh = minimist process.argv.slice 2 # opts in hash
 
-start_server = (opts) ->
-  http_redirect_serv(opts.uri).listen opts.httpPort, ->
-    logger.info "HTTP redirect server started on #{opts.httpPort};  version: #{version}"
-  (require 'https').createServer(opts.credentials, opts.app).listen opts.httpsPort, ->
-    logger.info "HTTPS server started on #{opts.httpsPort};  version: #{version}"
-
-http_redirect_serv = (uri) ->
-  express().use (req, res, next) ->
-    res.redirect 301, uri + req.url
-
-# dynamic initializations
-init = (app, server_uri) ->
-  loadSSL = (suff) -> util.readFileCurry 'sslcert/server.' + suff
-
-  async.parallel
-    key: loadSSL 'key'
-    cert: loadSSL 'cert'
-    ca: loadSSL 'intermediate.pem'
-    (err, creds) ->
-      if err then return logger.error err
-
-      start_server
-        app: app
-        uri: server_uri
-        httpPort: argh.port or argh.p or 8880
-        httpsPort: argh.sslPort or argh.s or 4443
-        credentials: creds
+parameters =
+  server_uri: 'https://maa.home.kg' # must match HTTPS certificate
+  port_http: argh.port or argh.p or 8880
+  port_https: argh.sslPort or argh.s or 4443
+  server_version: packageJson.version
 
 app = express()
-
-# SETTINGS
+app.locals.parameters = parameters
 app.set 'views', './views'
 app.set 'view engine', 'jade'
 # app.enable 'trust proxy'
 app.disable 'x-powered-by'  # don't include header 'powered by express'
 
-
-extend.route app, [ # MIDDLEWARE
+extend.route app, [                                     # MIDDLEWARE
     compression()
     express.static 'public' #serve static files in 'public' folder
     morgan ':remote-addr :remote-user ":method :url HTTP/:http-version"' +
       ' :status :res[content-length] ":referrer" ":user-agent"',
       stream: write: (x) -> logger.trace x # needs lambda to retain logger:this
     bodyParser.urlencoded extended:true #parse form responses in POST
-  ], # ROUTES
+  ],                                                    # ROUTES
   '/wallpaper': require 'app/controllers/wallpaper'
   '/upload': require('app/controllers/uploader')
     action:'/upload'
@@ -74,7 +47,7 @@ extend.route app, [ # MIDDLEWARE
     # this handles 404
     # must be after all routes and everything
     app.use (req, res, next) -> res.status(404).render '404'
-    init app, start_server
+    server.init app
 
 
 # SSL thing: proof of ownership
