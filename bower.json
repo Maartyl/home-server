@@ -1,0 +1,25 @@
+{
+  "name": "home-server",
+  "description": "maa home server",
+  "main": "main.js",
+  "authors": [
+    "Maartyl <kuronomaartyl@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Maartyl/home-server",
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "require": "https://github.com/letorbi/smoothie/blob/master/standalone/require.js"
+  }
+}
