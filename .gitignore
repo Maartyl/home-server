@@ -1,12 +1,11 @@
 private
 sslcert
 
-jsbin
 logs
 node_modules
 uploads
 
-public/wallpaper.png
+public/img/**
 
 main.js
 main.js.map
