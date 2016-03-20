@@ -20,6 +20,6 @@
     "tests"
   ],
   "dependencies": {
-    "require": "https://github.com/letorbi/smoothie/blob/master/standalone/require.js"
+    "require": "https://raw.githubusercontent.com/letorbi/smoothie/master/standalone/require.js"
   }
 }

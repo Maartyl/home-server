@@ -13,7 +13,7 @@ extend      = require 'app/extend'
 logger      = require 'app/logger'
 server      = require 'app/server'
 
-packageJson = require 'app/package.json'
+packageJson = require './package.json'
 
 argh = minimist process.argv.slice 2 # opts in hash
 
