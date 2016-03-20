@@ -1,2 +1,3 @@
 #!/bin/bash
+coffee -cm main.coffee
 util/nodemon main.js $@
