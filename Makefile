@@ -48,7 +48,7 @@ client_templates := client/gen/templates.js
 src_templates := client/jade
 
 client_bundle := $(client_js)/bundle.js
-src_bundle := client/bundle.settings.js
+src_bundle := client/bundle.settings.coffee
 
 .PHONY: client
 
