@@ -39,7 +39,7 @@ UGLIFY = cat
 else
 UG_EXTRA = sequences,properties,dead_code,conditionals,evaluate,booleans,loops,collapse_vars,warnings
 UG_EXTRA = warnings
-UGLIFY := uglifyjs --compress $(UG_EXTRA) --mangle --
+UGLIFY := uglifyjs --compress $(UG_EXTRA) --mangle --screw-ie8 --
 endif
 
 client_js := 'public/js'
