@@ -1,4 +1,7 @@
-Maa = module.exports = {}
+def = (getter) ->
+  get: getter
+  enumerable: true
 
-Maa.Templates = require './gen/templates.js'
-
+# load lazily //by using getters
+Object.defineProperties module.exports,
+  Templates:def -> require './gen/templates'
