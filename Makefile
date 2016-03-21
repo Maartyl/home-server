@@ -21,7 +21,7 @@ main.js: main.coffee
 
 ### --- CLIENT related ---
 
-# exported variales will be accessible through this global variable
+# exported variables will be accessible through this global variable
 bundle_accessor = Maa
 
 BC = browserify --standalone $(bundle_accessor)
@@ -29,7 +29,8 @@ BCOFFEE = -t coffeeify --extension=".coffee"
 
 ifndef DEVEL
 BUGLIFY = -t [ uglifyify -x .js -x .coffee ]
-BC = $(BC) --debug
+else
+BC := $(BC) --debug
 endif
 
 BC := $(BC) $(BCOFFEE) $(BUGLIFY)
@@ -49,6 +50,7 @@ src_templates := client/jade
 
 client_bundle := $(client_js)/bundle.js
 src_bundle := client/bundle.settings.coffee
+folder_bundle := client/src client/gen
 
 .PHONY: client
 
@@ -58,6 +60,6 @@ client: $(client_bundle)
 $(client_templates): $(shell find $(src_templates) -type f)
 	templatizer -d $(src_templates) -o $(client_templates)
 
-$(client_bundle): $(shell find $(src_bundle) -type f) $(client_templates)
+$(client_bundle): $(shell find $(folder_bundle) -type f) $(client_templates)
 	$(BC) $(src_bundle) | $(UGLIFY) > $(client_bundle)
 
