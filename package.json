@@ -3,9 +3,11 @@
   "version": "0.0.4",
   "private": true,
   "dependencies": {
+    "@lukekarrys/jade-runtime": "^1.11.1",
     "async": "^1.5.2",
     "body-parser": "^1.15.0",
     "coffee-script": "^1.10.0",
+    "coffeeify": "^2.0.1",
     "compression": "^1.6.1",
     "cson": "^3.0.2",
     "express": "^4.13.3",
@@ -15,6 +17,7 @@
     "morgan": "^1.7.0",
     "multer": "^1.1.0",
     "promise": "^7.1.1",
+    "templatizer": "^2.0.3",
     "underscore": "^1.8.3"
   }
 }

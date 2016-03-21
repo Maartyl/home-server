@@ -3,10 +3,11 @@ sslcert
 
 logs
 node_modules
-bower_components
 uploads
 
 public/img/**
+public/js/**
+client/gen/**
 
 main.js
 main.js.map
