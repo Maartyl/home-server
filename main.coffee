@@ -7,6 +7,7 @@ minimist    = require 'minimist'
 morgan      = require 'morgan'
 compression = require 'compression'
 bodyParser  = require 'body-parser'
+sass        = require 'node-sass-middleware'
 
 # app/ refers to root dir; symlink in node_modules
 extend      = require 'app/extend'
@@ -22,6 +23,7 @@ parameters =
   port_http: argh.port or argh.p or 8880
   port_https: argh.sslPort or argh.s or 4443
   server_version: packageJson.version
+  debug: true
 
 app = express()
 app.locals.parameters = parameters
@@ -33,6 +35,14 @@ app.disable 'x-powered-by'  # don't include header 'powered by express'
 extend.route app, [                                     # MIDDLEWARE
     compression()
     express.static 'public' #serve static files in 'public' folder
+    sass
+      src: 'client/scss'
+      dest: 'public/css/gen'
+      response: true
+      outputStyle: 'compressed'
+      debug: parameters.debug
+      prefix: '/css'
+      error: (err) -> console.error err
     morgan ':remote-addr :remote-user ":method :url HTTP/:http-version"' +
       ' :status :res[content-length] ":referrer" ":user-agent"',
       stream: write: (x) -> logger.trace x # needs lambda to retain logger:this
