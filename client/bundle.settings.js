@@ -1,4 +1,4 @@
-//require('jade-runtime');
+app = module.exports = {}
 
-document.Templates = require('./gen/templates.js');
+app.Templates = require('./gen/templates.js');
 

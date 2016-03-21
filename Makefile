@@ -21,7 +21,10 @@ main.js: main.coffee
 
 ### --- CLIENT related ---
 
-BC = browserify
+# exported variales will be accessible through this global variable
+bundle_accessor = Maa
+
+BC = browserify --standalone $(bundle_accessor)
 BCOFFEE = -t coffeeify --extension=".coffee"
 
 ifndef DEVEL
