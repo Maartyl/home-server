@@ -20,5 +20,8 @@
     "promise": "^7.1.1",
     "templatizer": "^2.0.3",
     "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "supertest": "^1.2.0"
   }
 }
