@@ -1,3 +1,17 @@
+### --- SERVER related ---
+
+
+.PHONY: run
+
+run: main.js
+	util/nodemon main.js $@
+
+main.js: main.coffee
+	coffee -cm main.coffee
+
+
+
+### --- CLIENT related ---
 
 NODE_ENV ?= 'development'
 ifeq ($(NODE_ENV),'development')
