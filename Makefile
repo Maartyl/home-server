@@ -1,5 +1,13 @@
-### --- SERVER related ---
+### @Maartyl server
 
+
+NODE_ENV ?= 'development'
+ifeq ($(NODE_ENV),'development')
+DEVEL := 'devel'
+endif
+
+
+### --- SERVER related ---
 
 .PHONY: run
 
@@ -12,11 +20,6 @@ main.js: main.coffee
 	coffee -cm main.coffee
 
 ### --- CLIENT related ---
-
-NODE_ENV ?= 'development'
-ifeq ($(NODE_ENV),'development')
-DEVEL := 'devel'
-endif
 
 BC = browserify
 BCOFFEE = -t coffeeify --extension=".coffee"
