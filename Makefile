@@ -3,13 +3,13 @@
 
 .PHONY: run
 
+NODEMON_WATCH = --watch main.js --watch src
+
 run: main.js
-	util/nodemon main.js $@
+	util/nodemon $(NODEMON_WATCH) main.js $(RUN_ARGS)
 
 main.js: main.coffee
 	coffee -cm main.coffee
-
-
 
 ### --- CLIENT related ---
 
