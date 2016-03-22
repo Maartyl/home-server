@@ -1,5 +1,6 @@
 express     = require 'express'
 minimist    = require 'minimist'
+async = require 'async'
 
 # middleware
 morgan      = require 'morgan'
@@ -8,7 +9,7 @@ bodyParser  = require 'body-parser'
 sass        = require 'node-sass-middleware'
 
 # app/ refers to root dir; symlink in node_modules
-extend      = require 'app/extend'
+# extend      = require 'app/extend'
 logger      = require 'app/logger'
 
 # cont:: (err, app) -> ()
@@ -20,7 +21,7 @@ logger      = require 'app/logger'
 # app.enable 'trust proxy'
   app.disable 'x-powered-by'  # don't include header 'powered by express'
 
-  extend.route app, [                                     # MIDDLEWARE
+  extend_route app, [                                           # MIDDLEWARE
       compression()
       express.static 'public' #serve static files in 'public' folder
       sass # CSS template engine (like LESS but better)
@@ -47,5 +48,16 @@ logger      = require 'app/logger'
         # must be after all routes and everything
         app.use (req, res, next) -> res.status(404).render '404'
 #TODO: add error handling
+      cont err, app
+
+
+# app(route), [use use use], {'/path': ((err, Router -> ()) -> ())}, cont::(err, app)
+@extend_route = extend_route = (app, middlewares, routes, cont) ->
+  app.use.apply app, middlewares
+  async.parallel routes,
+    (err, routes) ->
+      unless err
+        for path, r of routes
+          app.use path, r
       cont err, app
 
