@@ -1,6 +1,6 @@
 express     = require 'express'
 minimist    = require 'minimist'
-async = require 'async'
+async       = require 'async'
 
 # middleware
 morgan      = require 'morgan'
