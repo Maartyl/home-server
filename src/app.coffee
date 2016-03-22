@@ -9,7 +9,6 @@ bodyParser  = require 'body-parser'
 sass        = require 'node-sass-middleware'
 
 # app/ refers to root dir; symlink in node_modules
-# extend      = require 'app/extend'
 logger      = require 'app/logger'
 
 # cont:: (err, app) -> ()
@@ -21,7 +20,7 @@ logger      = require 'app/logger'
 # app.enable 'trust proxy'
   app.disable 'x-powered-by'  # don't include header 'powered by express'
 
-  extend_route app, [                                           # MIDDLEWARE
+  extend_route app, [                                     # MIDDLEWARE
       compression()
       express.static 'public' #serve static files in 'public' folder
       sass # CSS template engine (like LESS but better)
