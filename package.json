@@ -18,6 +18,8 @@
     "multer": "^1.1.0",
     "node-sass-middleware": "^0.9.7",
     "promise": "^7.1.1",
+    "socket.io": "^1.4.5",
+    "socket.io-client": "^1.4.5",
     "templatizer": "^2.0.3",
     "underscore": "^1.8.3"
   },
