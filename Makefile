@@ -2,6 +2,7 @@
 
 
 NODE_ENV ?= 'development'
+export NODE_ENV
 ifeq ($(NODE_ENV),'development')
 DEVEL := 'devel'
 endif
