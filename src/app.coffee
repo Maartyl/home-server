@@ -46,7 +46,12 @@ logger      = require 'app/logger'
         # this handles 404
         # must be after all routes and everything
         app.use (req, res, next) -> res.status(404).render '404'
-#TODO: add error handling
+        app.use (err, req, res, next) ->
+          logger.error err
+          if res.headersSent then return next err
+          res.status 500
+          res.render 'error', msg: 'Internal server error. Sorry.'
+          
       cont err, app
 
 
