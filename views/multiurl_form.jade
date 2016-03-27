@@ -1,0 +1,13 @@
+extends ./layout.jade
+
+block title
+  | Compose uris
+
+block body
+  .header.clearfix.row
+    .col-sm-1
+    h1.text-muted.col-sm-11 Compose uris
+  form.form-horizontal.jumbotron(role="form", id="uris_form", action=action, method="post")
+    textarea#uris.text.full-width(cols="86", rows="20", name="uris")
+    input.submit.btn.btn-primary(type="submit", value="Compose")
+

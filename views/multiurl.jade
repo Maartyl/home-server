@@ -1,0 +1,17 @@
+extends ./layout.jade
+
+block title
+  | Uris
+
+block body
+  .container
+    .header.clearfix.row
+      h1.text-muted Uris
+    .list-group
+      each uri in uris
+        a.list-group-item.row(href=uri)
+          //.col-sm-9
+          = uri
+          //.col-sm-3.embed-responsive.embed-responsive-16by9.pull-xs-right
+            iframe.pull-xs-right.embed-responsive-item(src=uri)
+

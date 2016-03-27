@@ -41,6 +41,8 @@ logger      = require 'app/logger'
       action:'/upload'
       uploads:'./uploads'
       key_path:'./private/upload_key'
+    '/multiurl': require('app/controllers/multiurl')
+      action: '/multiurl'
     (err, app) ->
       unless err
         # this handles 404
